@@ -1,0 +1,32 @@
+<VirtualHost *:80>
+	ServerAdmin webmaster@selecty.local
+	ServerName youse.selecty.local
+
+	DocumentRoot /home/vagrant/selecty/app
+	<Directory /home/vagrant/selecty/app/>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride All
+		Order allow,deny
+		allow from all
+		#EnableMMAP off
+		#EnableSendFile off
+	</Directory>
+
+	Alias /ws /home/vagrant/selecty/ws
+	<Directory /ws>
+		Options FollowSymLinks Indexes MultiViews
+		AllowOverride all
+		Order allow,deny
+		Allow from all
+		#Require all granted
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
