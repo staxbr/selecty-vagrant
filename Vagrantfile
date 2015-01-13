@@ -29,6 +29,11 @@ echo "Installing PostgreSQL..."
 apt-get -y install postgresql postgresql-plperl > /dev/null 
 echo "PostgreSQL installed"
 
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres'"
+echo "listen_addresses = '*'" | tee -a /etc/postgresql/9.1/main/postgresql.conf
+echo "host all all 192.168.0.0/16 md5" | tee -a /etc/postgresql/9.1/main/pg_hba.conf
+service postgresql restart
+
 rm -rf /var/www
 ln -fs /home/vagrant/selecty /var/www
 
