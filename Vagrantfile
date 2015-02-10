@@ -3,15 +3,18 @@ SelectySourcePath = "../../alisonalonso/selecty"
 
 Vagrant.configure("2") do |config|
   config.vm.box = "base"
-  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
+  config.vm.box_url = "hashicorp/precise64"  # "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
   #config.vm.network :forwarded_port, host: 4567, guest: 80
   config.vm.network :private_network, ip: "192.168.30.60"
-  config.vm.synced_folder SelectySourcePath, "/home/vagrant/selecty", :nfs => true
+  config.vm.synced_folder SelectySourcePath, "/home/vagrant/selecty"
   config.vm.provision "shell", :inline => <<'SCRIPT'
 
 # Exporta a variavel que define o root path do selecty
 echo "export SELECTY_HOME=/home/vagrant/selecty" | tee -a /etc/profile
 . /etc/profile
+
+# Add um alias para a maquina host
+echo "10.0.2.2  host" | tee -a /etc/hosts
 
 echo "Checking System Update..."
 apt-get -y update > /dev/null
@@ -46,10 +49,21 @@ a2enmod rewrite
 service apache2 reload
 
 # Instala composer
-curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Rodar composer instalando as dependências
 cd $SELECTY_HOME && composer install
+
+# Instala PHPUnit
+wget https://phar.phpunit.de/phpunit.phar
+chmod +x phpunit.phar
+mv phpunit.phar /usr/local/bin/phpunit
+phpunit --version
+
+# Configura os .htaccess
+cp .htaccess.default .htaccess
+cp app/.htaccess.default app/.htaccess
+cp app/cw/.htaccess.default app/cw/.htaccess
 
 SCRIPT
 
