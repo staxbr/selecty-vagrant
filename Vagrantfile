@@ -25,7 +25,7 @@ apt-get -y install apache2 > /dev/null
 echo "Apache installed"
 
 echo "Instalando PHP..."
-apt-get -y install php5 php5-gd php5-curl php5-pgsql php5-mcrypt > /dev/null
+apt-get -y install php5 php5-gd php5-curl php5-pgsql php5-mcrypt php5-xdebug > /dev/null
 echo "PHP instalado"
 
 echo "Installing PostgreSQL..."
