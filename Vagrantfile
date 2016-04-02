@@ -4,9 +4,15 @@ SelectySourcePath = "../../alisonalonso/selecty"
 Vagrant.configure("2") do |config|
   config.vm.box = "base"
   config.vm.box_url = "hashicorp/precise64"  # "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
-  #config.vm.network :forwarded_port, host: 4567, guest: 80
+  config.vm.network :forwarded_port, host: 4567, guest: 80
   config.vm.network :private_network, ip: "192.168.30.60"
   config.vm.synced_folder SelectySourcePath, "/home/vagrant/selecty"
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+    v.cpus = 4
+  end
+
   config.vm.provision "shell", :inline => <<'SCRIPT'
 
 # Exporta a variavel que define o root path do selecty
